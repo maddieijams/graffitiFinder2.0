@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Image, Platform } from "react-native";
-import { useForm } from "react-hook-form";
+import { Button, StyleSheet, Image, Platform, TextInput } from "react-native";
+import { Controller, useForm } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import * as Permissions from "expo-permissions";
@@ -19,13 +19,16 @@ export interface FormData {
   lng: number;
 }
 
-type Inputs = {
-  example: string;
-  exampleRequired: string;
-};
+// type Inputs = {
+//   title: string;
+//   image: string;
+//   info: string;
+//   lat: number;
+//   lng: number;
+// };
 
 export default function TabOneScreen() {
-  const { register, handleSubmit, watch, errors } = useForm<Inputs>();
+  const { register, handleSubmit, watch, errors, control } = useForm<FormData>();
   //find type
   const [photo, setPhoto] = useState<any>();
 
@@ -119,7 +122,7 @@ export default function TabOneScreen() {
     }
   };
 
-  return (
+  return ( 
     <View style={styles.container}>
       <Text style={styles.title}>Tab One</Text>
       <View
@@ -132,7 +135,7 @@ export default function TabOneScreen() {
       {photo && (
         <Image source={{ uri: photo }} style={{ width: 200, height: 200 }} />
       )}
-      <form onSubmit={handleSubmit(onSubmit)}>
+      {/* <form onSubmit={handleSubmit(onSubmit)}>
         <label>Title</label>
         <input name="title" ref={register} />
         <label>Image URL</label>
@@ -143,18 +146,81 @@ export default function TabOneScreen() {
         <input name="lat" ref={register} />
         <label>Longitude</label>
         <input name="lng" ref={register} />
-        {/* <button
-        type="button"
-        onClick={() => {
-          setValue("lastName", "luo"); // ✅
-          setValue("firstName", true); // ❌: true is not string
-          errors.bill; // ❌: property bill does not exist
-        }}
-      >
-        SetValue
-      </button> */}
         <input type="submit" />
-      </form>
+      </form> */}
+      <Controller
+      control={control}
+      render={({ onChange, onBlur, value }) => (
+        <TextInput
+          style={styles.input}
+          onBlur={onBlur}
+          onChangeText={value => onChange(value)}
+          value={value}
+        />
+      )}
+      name="title"
+      rules={{ required: true }}
+      defaultValue=""
+    />
+    {errors.title && <Text>This is required.</Text>}
+
+    <Controller
+      control={control}
+      render={({ onChange, onBlur, value }) => (
+        <TextInput
+          style={styles.input}
+          onBlur={onBlur}
+          onChangeText={value => onChange(value)}
+          value={value}
+        />
+      )}
+      name="image"
+      defaultValue=""
+    />
+
+    <Controller
+    control={control}
+    render={({ onChange, onBlur, value }) => (
+      <TextInput
+        style={styles.input}
+        onBlur={onBlur}
+        onChangeText={value => onChange(value)}
+        value={value}
+      />
+    )}
+    name="info"
+    defaultValue=""
+  />
+
+  <Controller
+  control={control}
+  render={({ onChange, onBlur, value }) => (
+    <TextInput
+      style={styles.input}
+      onBlur={onBlur}
+      onChangeText={value => onChange(value)}
+      value={value}
+    />
+  )}
+  name="lat"
+  defaultValue=""
+/>
+
+<Controller
+control={control}
+render={({ onChange, onBlur, value }) => (
+  <TextInput
+    style={styles.input}
+    onBlur={onBlur}
+    onChangeText={value => onChange(value)}
+    value={value}
+  />
+)}
+name="lng"
+defaultValue=""
+/>
+
+    <Button title="Submit" onPress={handleSubmit(onSubmit)} />
     </View>
   );
 }
